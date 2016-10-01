@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'CJPAdMobHelper'
-  s.version = '1.0'
+  s.version = '1.0.1'
   s.summary = 'A simple way to add AdMob banner ads to a UINavigationController based app.'
   s.description = <<-DESC
 CJPAdMobHelper is a singleton class enabling easy implementation of AdMob banner ads in your UINavigationController based iOS app.
