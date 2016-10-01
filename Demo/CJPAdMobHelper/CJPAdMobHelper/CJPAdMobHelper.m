@@ -128,9 +128,12 @@ static NSString * const CJPAdsPurchasedKey = @"adRemovalPurchased";
     GADRequest *adMobRequest = [GADRequest request];
     
     // Device identifier strings that will receive test AdMob ads
+    // This should be the Simulator in addition to any actual device IDs specified 
+    NSMutableArray *testDevIDs = [NSMutableArray arrayWithObject:kGADSimulatorID];
     if (_testDeviceIDs!=nil) {
-        adMobRequest.testDevices = _testDeviceIDs;
+        [testDevIDs addObjectsFromArray:_testDeviceIDs];
     }
+    adMobRequest.testDevices = [testDevIDs copy];
     
     /*
      COPPA
