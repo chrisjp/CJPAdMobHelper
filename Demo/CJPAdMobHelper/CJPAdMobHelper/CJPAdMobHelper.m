@@ -128,7 +128,7 @@ static NSString * const CJPAdsPurchasedKey = @"adRemovalPurchased";
     GADRequest *adMobRequest = [GADRequest request];
     
     // Device identifier strings that will receive test AdMob ads
-    // This should be the Simulator in addition to any actual device IDs specified 
+    // This should be the Simulator in addition to any actual device IDs specified
     NSMutableArray *testDevIDs = [NSMutableArray arrayWithObject:kGADSimulatorID];
     if (_testDeviceIDs!=nil) {
         [testDevIDs addObjectsFromArray:_testDeviceIDs];
@@ -138,14 +138,16 @@ static NSString * const CJPAdsPurchasedKey = @"adRemovalPurchased";
     /*
      COPPA
      
-     If this app has been tagged as being aimed at children (1), or not for children (0), send the value with the ad request
+     If this app has been tagged as being aimed at children (YES), or not for children (NO), send the value with the ad request
      Ignore if the tag has not been set
      */
     //
-    if ([_tagForChildDirectedTreatment isEqualToString:@"0"] || [_tagForChildDirectedTreatment isEqualToString:@"1"]) {
-        BOOL tagForCOPPA = [_tagForChildDirectedTreatment isEqualToString:@"1"] ? YES : NO;
-        [adMobRequest tagForChildDirectedTreatment:tagForCOPPA];
-        CJPLog(@"COPPA has been set to %i", tagForCOPPA);
+    if (_tagForChildDirectedTreatment!=nil) {
+        [adMobRequest tagForChildDirectedTreatment:_tagForChildDirectedTreatment.boolValue];
+        CJPLog(@"COPPA has been set to %d", _tagForChildDirectedTreatment.boolValue);
+    }
+    else {
+        CJPLog(@"COPPA has been left unset.");
     }
     
     /*
@@ -201,7 +203,7 @@ static NSString * const CJPAdsPurchasedKey = @"adRemovalPurchased";
     else {
         CJPLog(@"Temporarily hiding AdMob off screen.");
     }
-
+    
     [UIView animateWithDuration:0.25 animations:^{
         [self layoutAds];
     }];

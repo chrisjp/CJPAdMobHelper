@@ -21,17 +21,17 @@
 // Calling this method from your app delegate will begin the serving of ads.
 - (void)startWithViewController:(UIViewController *)contentController;
 
-/* 
+/*
  Call this method to remove ads from the view
  
  If `permanent` is set to YES, ads will not show until the app is next launched, or until the restartAds method is called.
  
  When set to NO, ads will only be removed off-screen temporarily - typically just a few minutes until the delegate receives a new ad.
  You probably won't have a use for this in production, but may find it useful when testing.
-
+ 
  If `permanent` AND `remember` are both set to YES, a boolean will be set in NSUserDefaults to remember this across future app launches.
  A typical use of this might be if your user purchases an IAP to remove ads from the app.
-*/
+ */
 - (void)removeAdsAndMakePermanent:(BOOL)permanent andRemember:(BOOL)remember;
 
 // A shortcut equivalent to calling removeAdsAndMakePermanent:NO andRemember:NO;
@@ -43,7 +43,7 @@
  This is intended to be called after removeAdsAndMakePermanent:YES has been called.
  It WILL take into account the andRemember boolean though, so ad serving will not be restarted
  if the boolean in NSUserDefaults is true.
-*/
+ */
 - (void)restartAdsAfterDelay:(NSTimeInterval)delay;
 
 // Shortcut for calling the above method with no delay (instantly restore ads to the view)
@@ -82,13 +82,13 @@
 
 /*
  From: https://firebase.google.com/docs/admob/ios/targeting#child-directed_setting
- If you set tagForChildDirectedTreatment to 1, you will indicate that your content should be treated as child-directed for purposes of COPPA.
- If you set tagForChildDirectedTreatment to 0, you will indicate that your content should not be treated as child-directed for purposes of COPPA.
+ If you set tagForChildDirectedTreatment to YES, you will indicate that your content should be treated as child-directed for purposes of COPPA.
+ If you set tagForChildDirectedTreatment to NO, you will indicate that your content should not be treated as child-directed for purposes of COPPA.
  If you do not set tagForChildDirectedTreatment, ad requests will include no indication of how you would like your content treated with respect to COPPA.
  By setting this tag, you certify that this notification is accurate and you are authorized to act on behalf of the owner of the app. You understand that abuse of this setting may result in termination of your Google account.
  */
-/// COPPA Compliance - You must read the guidelines above before using this. By default it is left unset, but can be set to "0" or "1".
-@property (nonatomic, copy) NSString *tagForChildDirectedTreatment;
+/// COPPA Compliance - You must read the guidelines above before using this. By default it is left unset. Pass a numberWithBool as either YES or NO to set.
+@property (nonatomic, copy) NSNumber *tagForChildDirectedTreatment;
 
 // Targeting
 /*
@@ -100,7 +100,7 @@
  GADRequest.h is also commented with notes on using this kind of data
  
  If you do not wish to show targeted ads to your users, you can just ignore all this and don't set any of these values in your app delegate.
-*/
+ */
 
 /// Gender - Optional. Either kGADGenderMale or kGADGenderFemale. Can be used to improve ad relevancy.
 @property (nonatomic, assign) GADGender adMobGender;
