@@ -1,4 +1,4 @@
-# CJPAdMobHelper 1.0
+# CJPAdMobHelper 1.0.1
 
 CJPAdMobHelper is a singleton class enabling easy implementation of Google AdMob banner ads in your iOS app.
 
@@ -55,20 +55,70 @@ CJPAdMobHelper will automatically display ads at the top or bottom of your view.
 self.window.rootViewController = [CJPAdMobHelper sharedInstance];
 ```
 
-## Configuration Options
+## Optional Configuration
 
 ### Delay the appearance of ads after app has launched
-By default, ads will be requested as soon as your app is launched. You can delay this by providing an NSTimeInterval, the following code would wait 5 seconds after your app has launched before requesting an ad:
+`initialDelay` accepts an `NSTimeInterval`. By default, ads will be requested as soon as your app is launched. You can delay the initial ad request like so:
 
 ```objective-c
 [CJPAdMobHelper sharedInstance].initialDelay = 5.0;
 ```
 
-## Targeting
-There are a number of specific options that can also be configured, as well as a number of general methods for hiding, removing, restoring ads etc.
-AdMob ads may also be targeted based on your users' age, gender and location. Please read the comments in the header file before using any of these.
-You can see an example of these in the demo project, furthermore, the header file is well commented with information on what each method does and how you might want to use them both in testing or in production.
+### Use AdMob "Smart" Banner Size
+`useAdMobSmartSize` accepts a `BOOL`. By default this is set to `YES` as recommended. AdMob's "smart banner sizing" will show a standard banner across the full width of the screen, automatically adjusting for rotation on iPhone devices. You can disable this if you prefer by setting it to `NO`. In this case a centred 320x50 banner will be displayed on iPhone devices in both orientations, while iPad devices will show a centred 728x90 banner in both orientations.
+For further information please see the AdMob docs: https://firebase.google.com/docs/admob/ios/banner#banner_size
 
+```objective-c
+[CJPAdMobHelper sharedInstance].useAdMobSmartSize = NO;
+```
+
+## Optional Targeting
+Some parameters can be set to target ads more specifically to your users, including age, gender and location. Please note that AdMob strongly advises you only use targeting if your app already collects this data from your users for legitimate purposes, i.e. for reasons other than advertising. More info: https://firebase.google.com/docs/admob/ios/targeting
+
+### Gender
+`adMobGender` accepts one of AdMob's constants for the user's gender. `kGADGenderMale`, `kGADGenderFemale` or `kGADGenderUnknown` are available, unknown is assumed here so gender will only be sent if the male or female value is used.
+
+```objective-c
+[CJPAdMobHelper sharedInstance].adMobGender = kGADGenderMale;
+```
+
+### Age
+`adMobBirthday` accepts an `NSDate` object containing the user's date of birth. If you store the day/month/year components instead of `NSDate` objects you can use code like this:
+
+```objective-c
+NSDateComponents *components = [[NSDateComponents alloc] init];
+    		 components.year = 1985;
+            components.month = 1;
+			  components.day = 1;
+[CJPAdMobHelper sharedInstance].adMobBirthday = [[NSCalendar currentCalendar] dateFromComponents:components]; 
+```
+
+### Location
+`adMobUserLocation` accepts an `NSDictionary` object containing the latitude, longitude and accuracy from CoreLocation for the user's location. This can be easily set using the method `setLocationWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude accuracy:(CGFloat)accuracyInMeters`. Assuming you use CoreLocation your code might look something like this:
+
+```objective-c
+CLLocation *currentLocation = locationManager.location;
+if (currentLocation) {
+    [[CJPAdMobHelper sharedInstance] setLocationWithLatitude:currentLocation.coordinate.latitude
+                                                   longitude:currentLocation.coordinate.longitude
+                                                    accuracy:currentLocation.horizontalAccuracy];
+}
+```
+
+### COPPA compliance
+`tagForChildDirectedTreatment` accepts an `NSNumber` object using the `numberWithBool:` method (you can't just pass a BOOL because it needs to be checked for nil as well as just YES/NO). Please read the [AdMob docs](https://firebase.google.com/docs/admob/ios/targeting#child-directed_setting) before setting this.
+> If you set tagForChildDirectedTreatment to YES, you will indicate that your content should be treated as child-directed for purposes of COPPA.
+>
+> If you set tagForChildDirectedTreatment to NO, you will indicate that your content should not be treated as child-directed for purposes of COPPA.
+>
+> If you do not set tagForChildDirectedTreatment, ad requests will include no indication of how you would like your content treated with respect to COPPA.
+>
+> By setting this tag, you certify that this notification is accurate and you are authorized to act on behalf of the owner of the app. You understand that abuse of this setting may result in termination of your Google account.
+
+
+```objective-c
+[CJPAdMobHelper sharedInstance].tagForChildDirectedTreatment = [NSNumber numberWithBool:YES];
+```
 
 ## Licence and Attribution
 If you're feeling kind you can provide attribution and a link to this GitHub project.
@@ -94,3 +144,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+## Changes
+
+### 1.0.1
+* Better handling of COPPA setting
+* Ensure test ads are shown when running in Simulator
+* Updated README with information on all optional configuration and targeting settings
+
+### 1.0.0
+* Initial release
