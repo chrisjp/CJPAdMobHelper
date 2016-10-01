@@ -12,7 +12,6 @@ CJPAdMobHelper is a singleton class enabling easy implementation of AdMob banner
                   DESC
   s.screenshots = ['http://i.imgur.com/daylYpc.png', 'http://i.imgur.com/RwaWJXh.png']
   s.license = 'MIT'
-  s.homepage = 'http://chrisphillips.co.uk'
   s.author = { 'Chris Phillips' => 'chrisjp88@gmail.com' }
   s.social_media_url = 'http://twitter.com/ChrisJP88'
   s.platform = :ios, '8.0'
